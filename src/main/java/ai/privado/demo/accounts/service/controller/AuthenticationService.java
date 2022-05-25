@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ai.privado.demo.accounts.apistubs.DataLoggerS;
 import ai.privado.demo.accounts.async.EventJobRun;
+import ai.privado.demo.accounts.async.SlackSendJobRun;
 import ai.privado.demo.accounts.service.dto.EventD;
 import ai.privado.demo.accounts.service.dto.LoginD;
 import ai.privado.demo.accounts.service.dto.SignupD;
@@ -33,7 +34,7 @@ import ai.privado.demo.accounts.service.repos.UsersR;
 @RestController
 @RequestMapping("/api/public/user")
 public class AuthenticationService {
-	Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
+	private static Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 	private final UsersR userr;
 	private final SessionsR sesr;
 	private final ModelMapper mapper;
@@ -66,6 +67,9 @@ public class AuthenticationService {
 				event.setData(objectMapper.writeValueAsString(signup));
 				EventJobRun ejr = new EventJobRun(datalogger, event);
 				apiExecutor.execute(ejr);
+				apiExecutor.execute(new SlackSendJobRun("someid", "New user Signup - " + signup.getEmail() + ", Name - "
+						+ signup.getFirstName() + " " + signup.getLastName()));
+
 			} catch (JsonProcessingException e) {
 				logger.error("Error scheduling api call: ", e);
 			}

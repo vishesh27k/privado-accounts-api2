@@ -15,7 +15,7 @@ import kong.unirest.Unirest;
 import kong.unirest.UnirestException;
 
 public class DataLoggerS {
-	Logger logger = LoggerFactory.getLogger(DataLoggerS.class);
+	private static Logger logger = LoggerFactory.getLogger(DataLoggerS.class);
 	@Autowired
 	private ObjectMapper objectMapper;
 	@Autowired

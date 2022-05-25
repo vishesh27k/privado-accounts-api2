@@ -7,7 +7,6 @@ import lombok.Setter;
 
 @Data
 @Setter
-
 public class EventJobRun implements Runnable {
 
 	private DataLoggerS datalogger;

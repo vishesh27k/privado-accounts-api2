@@ -31,7 +31,7 @@ import ai.privado.demo.accounts.service.repos.UsersR;
 @RestController
 @RequestMapping("/api/user")
 public class ProfileService {
-	Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
+	private static Logger logger = LoggerFactory.getLogger(ProfileService.class);
 	private final UsersR userr;
 	private final SessionsR sesr;
 	private final ModelMapper mapper;
