@@ -8,11 +8,6 @@ import org.slf4j.LoggerFactory;
 import com.slack.api.Slack;
 import com.slack.api.methods.SlackApiException;
 
-import lombok.Data;
-import lombok.Setter;
-
-@Data
-@Setter
 public class SlackSendJobRun implements Runnable {
 	private static Logger logger = LoggerFactory.getLogger(SlackSendJobRun.class);
 	private String id;

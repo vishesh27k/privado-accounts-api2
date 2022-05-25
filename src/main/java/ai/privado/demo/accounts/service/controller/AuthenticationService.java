@@ -21,9 +21,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ai.privado.demo.accounts.apistubs.DataLoggerS;
 import ai.privado.demo.accounts.async.EventJobRun;
+import ai.privado.demo.accounts.async.SGSendMailJobRun;
 import ai.privado.demo.accounts.async.SlackSendJobRun;
 import ai.privado.demo.accounts.service.dto.EventD;
 import ai.privado.demo.accounts.service.dto.LoginD;
+import ai.privado.demo.accounts.service.dto.SGEMailD;
 import ai.privado.demo.accounts.service.dto.SignupD;
 import ai.privado.demo.accounts.service.dto.UserProfileD;
 import ai.privado.demo.accounts.service.entity.SessionE;
@@ -69,7 +71,11 @@ public class AuthenticationService {
 				apiExecutor.execute(ejr);
 				apiExecutor.execute(new SlackSendJobRun("someid", "New user Signup - " + signup.getEmail() + ", Name - "
 						+ signup.getFirstName() + " " + signup.getLastName()));
-
+				SGEMailD email = new SGEMailD();
+				email.setEmailid(signup.getEmail());
+				email.setSubject("Welcome");
+				email.setMsgBody("Hi " + signup.getFirstName() + " Some welcome message");
+				apiExecutor.execute(new SGSendMailJobRun(email));
 			} catch (JsonProcessingException e) {
 				logger.error("Error scheduling api call: ", e);
 			}
