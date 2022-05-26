@@ -9,12 +9,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.Version;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 @MappedSuperclass
-@Data
-@NoArgsConstructor
 public class BaseE implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -42,6 +37,10 @@ public class BaseE implements java.io.Serializable {
 	@Version
 	private Long version = 0L;
 
+	public BaseE() {
+		super();
+	}
+
 	public BaseE(String createdBy, String updatedBy, LocalDateTime createdDate, LocalDateTime updatedDate,
 			boolean deleted) {
 		this.createdBy = createdBy;
@@ -49,6 +48,62 @@ public class BaseE implements java.io.Serializable {
 		this.createdDate = createdDate;
 		this.updatedDate = updatedDate;
 		this.deleted = deleted;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public LocalDateTime getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(LocalDateTime createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public LocalDateTime getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(LocalDateTime updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 
 	@PrePersist

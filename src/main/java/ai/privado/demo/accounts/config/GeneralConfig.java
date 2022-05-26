@@ -9,6 +9,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.flyway.FlywayDataSource;
@@ -30,16 +31,20 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ai.privado.demo.accounts.apistubs.DataLoggerS;
-import lombok.RequiredArgsConstructor;
 
 @Configuration
-@RequiredArgsConstructor
 @EnableTransactionManagement
 @EnableJpaRepositories(entityManagerFactoryRef = "AccountsEntityManagerFactory", transactionManagerRef = "AccountsTransactionManager", basePackages = {
 		"ai.privado.demo.accounts.service.repos" })
 public class GeneralConfig {
 
 	private final Environment env;
+
+	@Autowired
+	public GeneralConfig(Environment env) {
+		super();
+		this.env = env;
+	}
 
 	@Bean(name = "AccountsDataSource")
 	@FlywayDataSource

@@ -2,11 +2,7 @@ package ai.privado.demo.accounts.async;
 
 import ai.privado.demo.accounts.apistubs.DataLoggerS;
 import ai.privado.demo.accounts.service.dto.EventD;
-import lombok.Data;
-import lombok.Setter;
 
-@Data
-@Setter
 public class EventJobRun implements Runnable {
 
 	private DataLoggerS datalogger;
@@ -23,4 +19,21 @@ public class EventJobRun implements Runnable {
 		this.datalogger = datalogger;
 		this.event = event;
 	}
+
+	public DataLoggerS getDatalogger() {
+		return datalogger;
+	}
+
+	public void setDatalogger(DataLoggerS datalogger) {
+		this.datalogger = datalogger;
+	}
+
+	public EventD getEvent() {
+		return event;
+	}
+
+	public void setEvent(EventD event) {
+		this.event = event;
+	}
+
 }
