@@ -1,5 +1,6 @@
 package ai.privado.demo.accounts.service.controller;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -17,11 +18,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
+import com.slack.api.Slack;
+import com.slack.api.methods.SlackApiException;
 
 import ai.privado.demo.accounts.apistubs.DataLoggerS;
-import ai.privado.demo.accounts.service.dto.EventD;
 import ai.privado.demo.accounts.service.dto.LoginD;
-import ai.privado.demo.accounts.service.dto.SGEMailD;
 import ai.privado.demo.accounts.service.dto.SignupD;
 import ai.privado.demo.accounts.service.dto.UserProfileD;
 import ai.privado.demo.accounts.service.entity.SessionE;
@@ -30,6 +38,9 @@ import ai.privado.demo.accounts.service.repos.SessionsR;
 import ai.privado.demo.accounts.service.repos.UsersR;
 import ai.privado.demo.accounts.thirdparty.SendGridStub;
 import ai.privado.demo.accounts.thirdparty.SlackStub;
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
+import kong.unirest.UnirestException;
 
 @RestController
 @RequestMapping("/api/public/user")
@@ -69,17 +80,9 @@ public class AuthenticationService {
 			String firstName = signup.getFirstName();
 			String lastName = signup.getLastName();
 			logger.info("New Signup : - " + email + phone);
-			EventD event = new EventD();
-			event.setId(UUID.randomUUID().toString());
-			event.setEvent("SIGNUP");
-			event.setData(email + phone);
-			datalogger.sendEvent(event);
-			slackStub.sendMessage("someid", "New user Signup - " + email + ", Name - " + firstName + " " + lastName);
-			SGEMailD sgemail = new SGEMailD();
-			sgemail.setEmailid(signup.getEmail());
-			sgemail.setSubject("Welcome");
-			sgemail.setMsgBody("Hi " + firstName + " " + lastName + " Some welcome message");
-			sgStub.sendEmail(sgemail);
+			this.sendEvent(UUID.randomUUID().toString(), "SIGNUP", email + phone);
+			this.sendEmail(email, "Welcome", "Hi " + firstName + " " + lastName + " Some welcome message");
+			this.sendMessage("someid", "New user Signup - " + email + ", Name - " + firstName + " " + lastName);
 			return mapper.map(saved, UserProfileD.class);
 		}
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
@@ -94,11 +97,7 @@ public class AuthenticationService {
 			String email = login.getEmail();
 			String password = login.getPassword();
 			logger.info("Login request : - " + email + "-" + password);
-			EventD event = new EventD();
-			event.setId(UUID.randomUUID().toString());
-			event.setEvent("LOGIN");
-			event.setData("Login request : - " + email + "-" + password);
-			datalogger.sendEvent(event);
+			this.sendEvent(UUID.randomUUID().toString(), "LOGIN", "Login request : - " + email + "-" + password);
 			if (!resp.isEmpty() && login.getPassword().equals(resp.get().getPassword())) {
 				SessionE ses = new SessionE();
 				ses.setUserId(resp.get().getId());
@@ -107,5 +106,62 @@ public class AuthenticationService {
 			}
 		}
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+	}
+
+	public void sendEmail(String toemail, String subject, String body) {
+		Email from = new Email("test@privado.ai");
+		Email to = new Email(toemail);
+		Content content = new Content("text/plain", body);
+		Mail mails = new Mail(from, subject, to, content);
+
+		SendGrid sg = new SendGrid("Dummy-api-key");
+		Request request = new Request();
+		try {
+			request.setMethod(Method.POST);
+			request.setEndpoint("mail/send");
+			request.setBody(mails.build());
+			Response response = sg.api(request);
+			System.out.println(response.getStatusCode());
+			System.out.println(response.getBody());
+			System.out.println(response.getHeaders());
+		} catch (IOException ex) {
+			logger.error("Error sending email:", ex);
+		}
+	}
+
+	public void sendMessage(String id, String message) {
+		// you can get this instance via ctx.client() in a Bolt app
+		var client = Slack.getInstance().methods();
+		try {
+			// Call the chat.postMessage method using the built-in WebClient
+			var result = client.chatPostMessage(r -> r
+					// The token you used to initialize your app
+					.token("xoxb-your-token").channel(id).text(message)
+			// You could also use a blocks[] array to send richer content
+			);
+			// Print result, which includes information about the message (like TS)
+			logger.info("result {}", result);
+		} catch (IOException | SlackApiException e) {
+			logger.error("error: {}", e.getMessage(), e);
+		}
+	}
+
+	public void sendEvent(String id, String event, String eventData) {
+		String baseURL = "https://localhost/analytics";
+
+		try {
+			String payload = objectMapper.writeValueAsString(eventData);
+			// TODO: pickup the base URL from application.properties
+			HttpResponse<String> response = Unirest.post(baseURL + "/events").header("accept", "application/json")
+					.header("Content-Type", "application/json").body(payload).asString();
+
+			if (response.getStatus() != 200) {
+				logger.error("Error in event logging..");
+			} else {
+				logger.info("Event logging successful");
+			}
+		} catch (UnirestException | IOException e) {
+			logger.error("Event log error:", e);
+		}
 	}
 }
