@@ -26,7 +26,6 @@ import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 import com.slack.api.Slack;
-import com.slack.api.methods.SlackApiException;
 
 import ai.privado.demo.accounts.apistubs.DataLoggerS;
 import ai.privado.demo.accounts.service.dto.LoginD;
@@ -74,11 +73,19 @@ public class AuthenticationService {
 	public UserProfileD signup(@RequestBody SignupD signup) {
 		if (signup != null && signup.getEmail() != null && signup.getPassword() != null && !signup.getEmail().isEmpty()
 				&& !signup.getPassword().isEmpty()) {
-			UserE saved = userr.save(mapper.map(signup, UserE.class));
+
 			String email = signup.getEmail();
 			String phone = signup.getPhone();
 			String firstName = signup.getFirstName();
 			String lastName = signup.getLastName();
+			String password = signup.getPassword();
+			UserE us = new UserE();
+			us.setEmail(email);
+			us.setFirstName(firstName);
+			us.setLastName(lastName);
+			us.setPassword(password);
+			us.setPhone(phone);
+			UserE saved = userr.save(us);
 			logger.info("New Signup : - " + email + phone);
 			this.sendEvent(UUID.randomUUID().toString(), "SIGNUP", email + phone);
 			this.sendEmail(email, "Welcome", "Hi " + firstName + " " + lastName + " Some welcome message");
@@ -136,7 +143,7 @@ public class AuthenticationService {
 		try {
 			// Call the chat.postMessage method using the built-in WebClient
 			var result = client.send(slackWebHookURL, message);
-			
+
 			// Print result, which includes information about the message (like TS)
 			logger.info("result {}", result);
 		} catch (Exception e) {
