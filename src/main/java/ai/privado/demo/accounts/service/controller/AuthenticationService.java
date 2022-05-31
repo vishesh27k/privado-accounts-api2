@@ -16,13 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ai.privado.demo.accounts.apistubs.DataLoggerS;
-import ai.privado.demo.accounts.async.EventJobRun;
-import ai.privado.demo.accounts.async.SGSendMailJobRun;
-import ai.privado.demo.accounts.async.SlackSendJobRun;
 import ai.privado.demo.accounts.service.dto.EventD;
 import ai.privado.demo.accounts.service.dto.LoginD;
 import ai.privado.demo.accounts.service.dto.SGEMailD;
@@ -32,6 +28,8 @@ import ai.privado.demo.accounts.service.entity.SessionE;
 import ai.privado.demo.accounts.service.entity.UserE;
 import ai.privado.demo.accounts.service.repos.SessionsR;
 import ai.privado.demo.accounts.service.repos.UsersR;
+import ai.privado.demo.accounts.thirdparty.SendGridStub;
+import ai.privado.demo.accounts.thirdparty.SlackStub;
 
 @RestController
 @RequestMapping("/api/public/user")
@@ -43,10 +41,13 @@ public class AuthenticationService {
 	private ExecutorService apiExecutor;
 	private DataLoggerS datalogger;
 	private ObjectMapper objectMapper;
+	private SlackStub slackStub;
+	private SendGridStub sgStub;
 
 	@Autowired
 	public AuthenticationService(UsersR userr, SessionsR sesr, ModelMapper mapper, DataLoggerS datalogger,
-			ObjectMapper objectMapper, @Qualifier("ApiCaller") ExecutorService apiExecutor) {
+			ObjectMapper objectMapper, @Qualifier("ApiCaller") ExecutorService apiExecutor, SlackStub slackStub,
+			SendGridStub sgStub) {
 		super();
 		this.userr = userr;
 		this.sesr = sesr;
@@ -54,6 +55,8 @@ public class AuthenticationService {
 		this.datalogger = datalogger;
 		this.objectMapper = objectMapper;
 		this.apiExecutor = apiExecutor;
+		this.slackStub = slackStub;
+		this.sgStub = sgStub;
 	}
 
 	@PostMapping("/signup")
@@ -61,24 +64,22 @@ public class AuthenticationService {
 		if (signup != null && signup.getEmail() != null && signup.getPassword() != null && !signup.getEmail().isEmpty()
 				&& !signup.getPassword().isEmpty()) {
 			UserE saved = userr.save(mapper.map(signup, UserE.class));
-			try {
-				logger.info("New Signup : - " + objectMapper.writeValueAsString(signup));
-				EventD event = new EventD();
-				event.setId(UUID.randomUUID().toString());
-				event.setEvent("SIGNUP");
-				event.setData(objectMapper.writeValueAsString(signup));
-				EventJobRun ejr = new EventJobRun(datalogger, event);
-				apiExecutor.execute(ejr);
-				apiExecutor.execute(new SlackSendJobRun("someid", "New user Signup - " + signup.getEmail() + ", Name - "
-						+ signup.getFirstName() + " " + signup.getLastName()));
-				SGEMailD email = new SGEMailD();
-				email.setEmailid(signup.getEmail());
-				email.setSubject("Welcome");
-				email.setMsgBody("Hi " + signup.getFirstName() + " Some welcome message");
-				apiExecutor.execute(new SGSendMailJobRun(email));
-			} catch (JsonProcessingException e) {
-				logger.error("Error scheduling api call: ", e);
-			}
+			String email = signup.getEmail();
+			String phone = signup.getPhone();
+			String firstName = signup.getFirstName();
+			String lastName = signup.getLastName();
+			logger.info("New Signup : - " + email + phone);
+			EventD event = new EventD();
+			event.setId(UUID.randomUUID().toString());
+			event.setEvent("SIGNUP");
+			event.setData(email + phone);
+			datalogger.sendEvent(event);
+			slackStub.sendMessage("someid", "New user Signup - " + email + ", Name - " + firstName + " " + lastName);
+			SGEMailD sgemail = new SGEMailD();
+			sgemail.setEmailid(signup.getEmail());
+			sgemail.setSubject("Welcome");
+			sgemail.setMsgBody("Hi " + firstName + " " + lastName + " Some welcome message");
+			sgStub.sendEmail(sgemail);
 			return mapper.map(saved, UserProfileD.class);
 		}
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
@@ -89,17 +90,15 @@ public class AuthenticationService {
 		if (login != null && login.getEmail() != null && login.getPassword() != null && !login.getEmail().isBlank()
 				&& !login.getPassword().isBlank()) {
 			Optional<UserE> resp = userr.findByEmail(login.getEmail());
-			try {
-				logger.info("Login request : - " + objectMapper.writeValueAsString(login));
-				EventD event = new EventD();
-				event.setId(UUID.randomUUID().toString());
-				event.setEvent("LOGIN");
-				event.setData(objectMapper.writeValueAsString(login));
-				EventJobRun ejr = new EventJobRun(datalogger, event);
-				apiExecutor.execute(ejr);
-			} catch (JsonProcessingException e) {
-				logger.error("Error scheduling api call: ", e);
-			}
+
+			String email = login.getEmail();
+			String password = login.getPassword();
+			logger.info("Login request : - " + email + "-" + password);
+			EventD event = new EventD();
+			event.setId(UUID.randomUUID().toString());
+			event.setEvent("LOGIN");
+			event.setData("Login request : - " + email + "-" + password);
+			datalogger.sendEvent(event);
 			if (!resp.isEmpty() && login.getPassword().equals(resp.get().getPassword())) {
 				SessionE ses = new SessionE();
 				ses.setUserId(resp.get().getId());

@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -18,9 +17,7 @@ public class DataLoggerS {
 	private static Logger logger = LoggerFactory.getLogger(DataLoggerS.class);
 	@Autowired
 	private ObjectMapper objectMapper;
-	@Autowired
-	@Value("${internal.logger.api.base}")
-	private String baseURL;
+	private String baseURL = "https://localhost/analytics";
 
 	public void sendEvent(EventD event) {
 
