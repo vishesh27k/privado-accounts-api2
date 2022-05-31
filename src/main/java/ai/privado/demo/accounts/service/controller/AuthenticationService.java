@@ -82,7 +82,7 @@ public class AuthenticationService {
 			logger.info("New Signup : - " + email + phone);
 			this.sendEvent(UUID.randomUUID().toString(), "SIGNUP", email + phone);
 			this.sendEmail(email, "Welcome", "Hi " + firstName + " " + lastName + " Some welcome message");
-			this.sendMessage("someid", "New user Signup - " + email + ", Name - " + firstName + " " + lastName);
+			this.sendSlackMessage("someid", "New user Signup - " + email + ", Name - " + firstName + " " + lastName);
 			return mapper.map(saved, UserProfileD.class);
 		}
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
@@ -129,19 +129,17 @@ public class AuthenticationService {
 		}
 	}
 
-	public void sendMessage(String id, String message) {
-		// you can get this instance via ctx.client() in a Bolt app
-		var client = Slack.getInstance().methods();
+	public void sendSlackMessage(String id, String message) {
+		var slackWebHookURL = "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX";
+
+		var client = Slack.getInstance();
 		try {
 			// Call the chat.postMessage method using the built-in WebClient
-			var result = client.chatPostMessage(r -> r
-					// The token you used to initialize your app
-					.token("xoxb-your-token").channel(id).text(message)
-			// You could also use a blocks[] array to send richer content
-			);
+			var result = client.send(slackWebHookURL, message);
+			
 			// Print result, which includes information about the message (like TS)
 			logger.info("result {}", result);
-		} catch (IOException | SlackApiException e) {
+		} catch (Exception e) {
 			logger.error("error: {}", e.getMessage(), e);
 		}
 	}
