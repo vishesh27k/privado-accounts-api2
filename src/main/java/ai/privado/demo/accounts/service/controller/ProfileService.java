@@ -26,13 +26,13 @@ import ai.privado.demo.accounts.service.dto.UserProfileD;
 import ai.privado.demo.accounts.service.entity.SessionE;
 import ai.privado.demo.accounts.service.entity.UserE;
 import ai.privado.demo.accounts.service.repos.SessionsR;
-import ai.privado.demo.accounts.service.repos.UsersR;
+import ai.privado.demo.accounts.service.repos.UserRepository;
 
 @RestController
 @RequestMapping("/api/user")
 public class ProfileService {
 	private static Logger logger = LoggerFactory.getLogger(ProfileService.class);
-	private final UsersR userr;
+	private final UserRepository userr;
 	private final SessionsR sesr;
 	private final ModelMapper mapper;
 	private ExecutorService apiExecutor;
@@ -40,7 +40,7 @@ public class ProfileService {
 	private ObjectMapper objectMapper;
 
 	@Autowired
-	public ProfileService(UsersR userr, SessionsR sesr, ModelMapper mapper,
+	public ProfileService(UserRepository userr, SessionsR sesr, ModelMapper mapper,
 			@Qualifier("ApiCaller") ExecutorService apiExecutor, DataLoggerS datalogger, ObjectMapper objectMapper) {
 		super();
 		this.userr = userr;

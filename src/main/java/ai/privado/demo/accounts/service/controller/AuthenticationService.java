@@ -35,7 +35,7 @@ import ai.privado.demo.accounts.service.dto.UserProfileD;
 import ai.privado.demo.accounts.service.entity.SessionE;
 import ai.privado.demo.accounts.service.entity.UserE;
 import ai.privado.demo.accounts.service.repos.SessionsR;
-import ai.privado.demo.accounts.service.repos.UsersR;
+import ai.privado.demo.accounts.service.repos.UserRepository;
 import ai.privado.demo.accounts.thirdparty.SendGridStub;
 import ai.privado.demo.accounts.thirdparty.SlackStub;
 import kong.unirest.HttpResponse;
@@ -46,7 +46,7 @@ import kong.unirest.UnirestException;
 @RequestMapping("/api/public/user")
 public class AuthenticationService {
 	private static Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
-	private final UsersR userr;
+	private final UserRepository userr;
 	private final SessionsR sesr;
 	private final ModelMapper mapper;
 	private ExecutorService apiExecutor;
@@ -56,7 +56,7 @@ public class AuthenticationService {
 	private SendGridStub sgStub;
 
 	@Autowired
-	public AuthenticationService(UsersR userr, SessionsR sesr, ModelMapper mapper, DataLoggerS datalogger,
+	public AuthenticationService(UserRepository userr, SessionsR sesr, ModelMapper mapper, DataLoggerS datalogger,
 			ObjectMapper objectMapper, @Qualifier("ApiCaller") ExecutorService apiExecutor, SlackStub slackStub,
 			SendGridStub sgStub) {
 		super();
