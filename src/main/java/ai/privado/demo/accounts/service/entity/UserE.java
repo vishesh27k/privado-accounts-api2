@@ -28,6 +28,10 @@ public class UserE extends BaseE {
 	@Column(name = "DOB", length = 200)
 	private String dob;
 
+	@Column(name = "Loyalty_Number", length = 200)
+	private String loyaltynumber;
+
+	
 	public String getFirstName() {
 		return firstName;
 	}
@@ -75,5 +79,13 @@ public class UserE extends BaseE {
 	public void setDob(String dob) {
 		this.dob = dob;
 	}
+	
+	public String getLoyaltyNumber() {
+		return loyaltynumber;
+	}
+
+	public void setLoyaltyNumber(String loyaltynumber) {
+		this.loyaltynumber = loyaltynumber;
+	}	
 
 }
