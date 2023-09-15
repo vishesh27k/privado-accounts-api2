@@ -28,8 +28,8 @@ public class UserE extends BaseE {
 	@Column(name = "DOB", length = 200)
 	private String dob;
 
-	@Column(name = "Home_Address", length = 200)
-	private String homeaddress;
+//	@Column(name = "Home_Address", length = 200)
+//	private String homeaddress;
 
 	
 	public String getFirstName() {
@@ -80,12 +80,12 @@ public class UserE extends BaseE {
 		this.dob = dob;
 	}
 	
-	public String getHomeAddress() {
-		return homeaddress;
-	}
+//	public String getHomeAddress() {
+//		return homeaddress;
+//	}
 
-	public void setHomeAddress(String homeaddress) {
-		this.homeaddress = homeaddress;
-	}	
+//	public void setHomeAddress(String homeaddress) {
+//		this.homeaddress = homeaddress;
+//	}	
 
 }
