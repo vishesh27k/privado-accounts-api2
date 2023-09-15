@@ -28,8 +28,8 @@ public class UserE extends BaseE {
 	@Column(name = "DOB", length = 200)
 	private String dob;
 
-	@Column(name = "Device_ID", length = 200)
-	private String deviceid;
+//	@Column(name = "Device_ID", length = 200)
+//	private String deviceid;
 
 	
 	public String getFirstName() {
@@ -80,12 +80,12 @@ public class UserE extends BaseE {
 		this.dob = dob;
 	}
 	
-	public String getDeviceID() {
-		return deviceid;
-	}
+//	public String getDeviceID() {
+//		return deviceid;
+//	}
 
-	public void setDeviceID(String deviceid) {
-		this.deviceid = deviceid;
-	}	
+//	public void setDeviceID(String deviceid) {
+//		this.deviceid = deviceid;
+//	}	
 
 }
