@@ -28,11 +28,11 @@ public class UserE extends BaseE {
 	@Column(name = "DOB", length = 200)
 	private String dob;
 
-	@Column(name = "Device_ID", length = 200)
+/*	@Column(name = "Device_ID", length = 200)
 	private String deviceid;
 
-//	@Column(name = "Advertising_ID", length = 200)
-//	private String advertisingid;
+	@Column(name = "Advertising_ID", length = 200)
+	private String advertisingid;*/
 
 	
 	public String getFirstName() {
@@ -83,7 +83,7 @@ public class UserE extends BaseE {
 		this.dob = dob;
 	}
 	
-	public String getDeviceID() {
+/*	public String getDeviceID() {
 		return deviceid;
 	}
 
@@ -91,7 +91,7 @@ public class UserE extends BaseE {
 		this.deviceid = deviceid;
 	}	
 	
-/*	public String getAdvertisingID() {
+	public String getAdvertisingID() {
 		return advertisingid;
 	}
 
