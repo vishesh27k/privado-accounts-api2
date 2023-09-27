@@ -31,6 +31,9 @@ public class UserE extends BaseE {
 	@Column(name = "Device_ID", length = 200)
 	private String deviceid;
 
+	@Column(name = "Advertising_ID", length = 200)
+	private String advertisingid;
+
 	
 	public String getFirstName() {
 		return firstName;
@@ -86,6 +89,14 @@ public class UserE extends BaseE {
 
 	public void setDeviceID(String deviceid) {
 		this.deviceid = deviceid;
+	}	
+	
+	public String getAdvertisingID() {
+		return advertisingid;
+	}
+
+	public void setAdvertisingID(String Advertisingid) {
+		this.advertisingid = advertisingid;
 	}	
 
 }
