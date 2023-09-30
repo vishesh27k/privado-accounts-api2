@@ -31,9 +31,9 @@ public class UserE extends BaseE {
 	@Column(name = "Device_ID", length = 200)
 	private String deviceid;
 
-	@Column(name = "Device_Info", length = 200)
+/*	@Column(name = "Device_Info", length = 200)
 	private String deviceinfo;
-	
+*/	
 	@Column(name = "Advertising_ID", length = 200)
 	private String advertisingid;
 
@@ -94,13 +94,13 @@ public class UserE extends BaseE {
 		this.deviceid = deviceid;
 	}	
 
-	public String getDeviceInfo() {
+/*	public String getDeviceInfo() {
 		return deviceinfo;
 	}
 
 	public void setDeviceInfo(String deviceinfo) {
 		this.deviceinfo = deviceinfo;
-	}	
+	}	*/
 
 	public String getAdvertisingID() {
 		return advertisingid;
