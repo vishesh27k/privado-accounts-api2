@@ -1,6 +1,6 @@
 name: Privado Code Scan
 
-on: [pull_request]
+on: [push]
 
 jobs:
   privado_scan:
