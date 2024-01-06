@@ -22,10 +22,10 @@ jobs:
 
         TOKEN=$(curl -s -H 'Content-Type: application/json' -H "Authorization: Token $PRIVADO_API_TOKEN" -H "idt: $PRIVADO_API_TOKEN" "$PRIVADO_API_HOST/ce/integrations/customers/$PRIVADO_API_ID/docker-registry-token?ci=true")
         echo "Token: $TOKEN"  # Be cautious with printing sensitive data
-        echo $TOKEN | docker login --username AWS --password-stdin 638117407428.dkr.ecr.eu-west-1.amazonaws.com
+        echo $TOKEN | docker login --username AWS --password-stdin 638117407428.dkr.ecr.ap-south.amazonaws.com
         
         echo "Pulling latest Docker image"
-        docker pull 638117407428.dkr.ecr.eu-west-1.amazonaws.com/scanner-agent:latest
+        docker pull 638117407428.dkr.ecr.ap-south.amazonaws.com/scanner-agent:latest
       shell: bash
 
     - name: Run Privado Scan
@@ -52,4 +52,4 @@ jobs:
         docker run -t -v $GITHUB_WORKSPACE:$GITHUB_WORKSPACE:rw \
           -v /var/run/docker.sock:/var/run/docker.sock \
           --env-file $GITHUB_WORKSPACE/.privado.env \
-          638117407428.dkr.ecr.eu-west-1.amazonaws.com/scanner-agent:latest
+          638117407428.dkr.ecr.ap-south.amazonaws.com/scanner-agent:latest
