@@ -20,7 +20,7 @@ jobs:
         PRIVADO_API_HOST=${{ secrets.PRIVADO_API_HOST }}
         PRIVADO_API_ID=${{ secrets.PRIVADO_API_ID }}
 
-        TOKEN=$(curl -s -H 'Content-Type: application/json' -H "Authorization: Token $PRIVADO_API_TOKEN" -H "idt: $PRIVADO_API_TOKEN" "$PRIVADO_API_HOST/ce/integrations/customers/$PRIVADO_API_ID/docker-registry-token?ci=true")
+        TOKEN=$(curl -s -H 'Content-Type: application/json' -H "Authorization: Token $PRIVADO_API_TOKEN" -H "idt: $PRIVADO_API_TOKEN" -H 'data-url: /ce/integrations/customers/${PRIVADO_API_ID}/docker-registry-token' ${PRIVADO_API_HOST}/ce/integrations/customers/${PRIVADO_API_ID}/docker-registry-token?ci=true)
         echo "token:" $TOKEN
         echo $TOKEN | docker login --username AWS --password-stdin 638117407428.dkr.ecr.ap-south-1.amazonaws.com
         echo "Pulling latest Docker image"
