@@ -32,6 +32,7 @@ jobs:
         PRIVADO_REPO_PATH="$PRIVADO_BASE_PATH/repositories/${{ secrets.PRIVADO_API_ID }}/${{ github.repository }}"
         mkdir -p $PRIVADO_REPO_PATH
         rsync -a --exclude="$(basename $PRIVADO_BASE_PATH)" . $PRIVADO_REPO_PATH
+        ls .
 
         # Print environment variables 
         echo "PRIVADO_BASE_PATH=$PRIVADO_BASE_PATH" >> $GITHUB_WORKSPACE/.privado.env
