@@ -43,7 +43,7 @@ jobs:
         echo "PRIVADO_REPOSITORY_NAME=${{ github.repository }}" >> $GITHUB_WORKSPACE/.privado.env
         echo "PRIVADO_COMMIT_ID=${{ github.sha }}" >> $GITHUB_WORKSPACE/.privado.env
         echo "PRIVADO_BRANCH_NAME=${{ github.ref_name }}" >> $GITHUB_WORKSPACE/.privado.env
-        echo "PRIVADO_DEFAULT_BRANCH_NAME=${{ github.event.repository.default_branch }}" >> $GITHUB_WORKSPACE/.privado.env
+        echo "PRIVADO_DEFAULT_BRANCH_NAME=${{ github.ref_name }}" >> $GITHUB_WORKSPACE/.privado.env
         echo "PRIVADO_REPOSITORY_URL=${{ github.server_url }}/${{ github.repository }}" >> $GITHUB_WORKSPACE/.privado.env
 
         # Run Docker container with environment variables
