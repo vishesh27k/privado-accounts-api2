@@ -33,6 +33,16 @@ jobs:
         mkdir -p $PRIVADO_REPO_PATH
         rsync -a --exclude="$(basename $PRIVADO_BASE_PATH)" . $PRIVADO_REPO_PATH
 
+        # Print environment variables 
+        echo "PRIVADO_BASE_PATH=$PRIVADO_BASE_PATH" >> $GITHUB_WORKSPACE/.privado.env
+        echo "PRIVADO_CI_PLATFORM=JENKINS" >> $GITHUB_WORKSPACE/.privado.env
+        echo "PRIVADO_REPOSITORY_ID=${{ github.repository_id }}" >> $GITHUB_WORKSPACE/.privado.env
+        echo "PRIVADO_REPOSITORY_NAME=${{ github.repository }}" >> $GITHUB_WORKSPACE/.privado.env
+        echo "PRIVADO_COMMIT_ID=${{ github.sha }}" >> $GITHUB_WORKSPACE/.privado.env
+        echo "PRIVADO_BRANCH_NAME=${{ github.ref_name }}" >> $GITHUB_WORKSPACE/.privado.env
+        echo "PRIVADO_DEFAULT_BRANCH_NAME=${{ github.ref_name }}" >> $GITHUB_WORKSPACE/.privado.env
+        echo "PRIVADO_REPOSITORY_URL=${{ github.server_url }}/${{ github.repository }}" >> $GITHUB_WORKSPACE/.privado.env
+
         # Export environment variables to a file
         echo "PRIVADO_API_TOKEN=${{ secrets.PRIVADO_API_TOKEN }}" > $GITHUB_WORKSPACE/.privado.env
         echo "PRIVADO_API_ID=${{ secrets.PRIVADO_API_ID }}" >> $GITHUB_WORKSPACE/.privado.env
