@@ -3,7 +3,7 @@ name: Privado Code Scan
 on: [push]
 
 jobs:
-  privado_scan:
+  privado_ossscan:
     runs-on: ubuntu-latest
 
     steps:
