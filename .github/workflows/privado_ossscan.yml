@@ -17,8 +17,14 @@ jobs:
       run: |
         curl -o- https://raw.githubusercontent.com/Privado-Inc/privado-cli/main/install.sh | bash
 
+    - name: Locate Privado CLI
+      run: |
+        echo "Locating Privado CLI..."
+        find / -name privado -type f 2>/dev/null
+
     - name: Scan with Privado
       run: |
+        export PATH=$PATH:$(dirname $(find / -name privado -type f 2>/dev/null))
         privado scan .
 
     - name: Display Results
