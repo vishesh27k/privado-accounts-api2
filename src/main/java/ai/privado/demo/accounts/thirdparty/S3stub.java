@@ -1,4 +1,4 @@
-package your.package.name;
+package ai.privado.demo.s3store;
 
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
