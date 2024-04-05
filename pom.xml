@@ -65,6 +65,27 @@
 			<groupId>com.sendgrid</groupId>
 			<artifactId>sendgrid-java</artifactId>
 		</dependency>
+		<dependency>
+            		<groupId>com.mixpanel</groupId>
+            		<artifactId>mixpanel-java</artifactId>
+            		<version>[latest-version]</version>
+        	</dependency>
+
+        <!-- Segment Dependency -->
+        	<dependency>
+            		<groupId>com.segment.analytics.java</groupId>
+            		<artifactId>analytics-java</artifactId>
+            		<version>[latest-version]</version>
+        	</dependency>
+
+        <!-- Amplitude Dependency (if using server-side) -->
+        <!-- Note: Amplitude SDK is typically used for mobile apps; adjust if using a different integration -->
+        	<dependency>
+            		<groupId>com.amplitude</groupId>
+            		<artifactId>amplitude-java</artifactId>
+            		<version>[latest-version]</version>
+        	</dependency>
+		
 	</dependencies>
 
 	<build>
