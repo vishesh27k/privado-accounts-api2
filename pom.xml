@@ -85,6 +85,12 @@
             		<artifactId>amplitude-java</artifactId>
             		<version>[latest-version]</version>
         	</dependency>
+		<dependency>
+   			 <groupId>software.amazon.awssdk</groupId>
+			 <artifactId>s3</artifactId>
+    			<version>[latest-version]</version>
+		</dependency>
+
 		
 	</dependencies>
 
