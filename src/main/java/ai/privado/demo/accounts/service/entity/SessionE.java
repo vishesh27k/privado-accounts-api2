@@ -20,5 +20,4 @@ public class SessionE extends BaseE {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-
 }
