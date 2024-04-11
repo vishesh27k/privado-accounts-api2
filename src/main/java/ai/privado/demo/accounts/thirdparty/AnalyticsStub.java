@@ -34,6 +34,7 @@ public class AnalyticsService {
     public void trackEvent(String eventName, JSONObject properties) {
         // Track event for Mixpanel
         MessageBuilder messageBuilder = new MessageBuilder(MIXPANEL_API_KEY);
+        properties["accountId"] = accountId;
         JSONObject event = messageBuilder.event("distinct_id", eventName, properties);
         ClientDelivery delivery = new ClientDelivery();
         delivery.addMessage(event);
