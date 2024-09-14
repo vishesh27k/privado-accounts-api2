@@ -77,6 +77,11 @@
             		<artifactId>analytics-java</artifactId>
             		<version>[latest-version]</version>
         	</dependency>
+        	<dependency>
+            		<groupId>com.flipkart.analytics.java</groupId>
+            		<artifactId>flipkart-java</artifactId>
+            		<version>[latest-version]</version>
+        	</dependency>
 
         <!-- Amplitude Dependency (if using server-side) -->
         <!-- Note: Amplitude SDK is typically used for mobile apps; adjust if using a different integration -->
